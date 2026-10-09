@@ -16,7 +16,7 @@ const NOW = Date.parse('2026-10-06T18:00:00.000Z');
 async function setup(over: Partial<Settings> = {}, now = () => NOW) {
   const home = await makeTmp('cum-home-');
   const fs = new NodeFileSystem();
-  const platform = new PlatformService(detectEnvironment({ platform: process.platform === 'win32' ? 'linux' : process.platform, env: {}, homedir: home }), fs);
+  const platform = new PlatformService(detectEnvironment({ platform: process.platform, env: {}, homedir: home }), fs);
   const cacheFile = path.join(home, 'cache.json');
   const cache = new CacheStore(fs, cacheFile);
   const lines: string[] = [];
