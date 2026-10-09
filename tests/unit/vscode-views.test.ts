@@ -12,6 +12,7 @@ const snap = {
   status: 'ok',
   basis: 'all',
   window: { totals: { ...emptyTotals(), input: 5, total: 5 }, counted: 5, messageCount: 1, sessionCount: 1, byModel: [], currentModel: 'claude-opus-5-5' },
+  capacity: { tokens: 100, provider: 'user-configured', method: 'm', confidence: 'high', note: 'n' },
   burnRatePerMinute: 0,
   sparkline: [0, 1],
   hourly: [],

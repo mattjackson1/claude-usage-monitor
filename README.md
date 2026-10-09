@@ -19,6 +19,7 @@ remote windows (SSH, Dev Containers, Codespaces) — see *Remote* below.
 Claude Code does not store your plan's limit locally, so the extension cannot know your true capacity.
 By default it estimates capacity as the heaviest completed 5-hour block in your own history (shown with
 low/medium confidence). For a stable figure set **`claudeUsage.customCapacity`** (tokens per 5-hour window).
+Until you set it, the status bar shows tokens used (e.g. `🧠 248M`) and notifications stay off; the dashboard and tree still show the estimate, marked with `~`.
 Token counts, burn rate and the window itself are exact for what is on this machine.
 
 ## Commands

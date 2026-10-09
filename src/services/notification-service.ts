@@ -17,7 +17,8 @@ export function evaluateNotifications(
   state: NotificationState,
 ): NotificationEvent[] {
   const events: NotificationEvent[] = [];
-  const pct = snapshot.percentUsed;
+  // Estimated capacities are too unreliable to alert on; only a user-set capacity qualifies.
+  const pct = snapshot.capacity?.confidence === 'high' ? snapshot.percentUsed : undefined;
   const hasUsage = snapshot.window.messageCount > 0;
 
   if (pct !== undefined) {

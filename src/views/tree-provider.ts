@@ -24,7 +24,7 @@ export function buildTreeModel(snap: UsageSnapshot | undefined, hideCache: boole
       description:
         snap.percentUsed === undefined
           ? `${formatNumber(w.counted)} tokens`
-          : `${percentText(snap.percentUsed)} (${formatNumber(w.counted)} tokens)`,
+          : `${snap.capacity?.confidence === 'high' ? '' : '~'}${percentText(snap.percentUsed)} (${formatNumber(w.counted)} tokens)`,
       icon: 'pulse',
     },
     {

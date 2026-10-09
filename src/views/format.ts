@@ -71,8 +71,10 @@ export function statusBarModel(
 
   const used = formatTokens(snap.window.counted);
   const tokensUsed = `🧠 ${used}`;
+  // Percent/remaining/time modes only make sense against a capacity the user set.
+  const reliable = snap.capacity?.confidence === 'high';
   let text: string;
-  switch (mode) {
+  switch (reliable ? mode : 'tokensUsed') {
     case 'percentage':
       text = snap.percentUsed === undefined ? tokensUsed : `🧠 ${percentText(snap.percentUsed)}`;
       break;
@@ -94,10 +96,13 @@ export function statusBarModel(
   }
 
   const tip: string[] = [`5-hour window: ${formatNumber(snap.window.counted)} tokens`];
-  if (snap.capacity) {
-    tip.push(`${percentText(snap.percentUsed ?? 0)} of ${formatNumber(snap.capacity.tokens)} (${snap.capacity.method}, ${snap.capacity.confidence} confidence)`);
+  if (snap.capacity && reliable) {
+    tip.push(`${percentText(snap.percentUsed ?? 0)} of ${formatNumber(snap.capacity.tokens)} (${snap.capacity.method})`);
+  } else if (snap.capacity) {
+    tip.push(`~${percentText(snap.percentUsed ?? 0)} of an estimated ${formatNumber(snap.capacity.tokens)} (${snap.capacity.method})`);
+    tip.push('Set claudeUsage.customCapacity to show percentages in the status bar');
   } else tip.push('Capacity unknown — set claudeUsage.customCapacity');
   if (snap.window.resetAt) tip.push(`Oldest usage ages out at ${formatClock(snap.window.resetAt)}`);
   tip.push('Click to open the dashboard');
-  return { text, tooltip: tip.join('\n'), severity: severityFor(snap.percentUsed, thresholds) };
+  return { text, tooltip: tip.join('\n'), severity: severityFor(reliable ? snap.percentUsed : undefined, thresholds) };
 }

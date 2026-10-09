@@ -97,6 +97,17 @@ describe('statusBarModel', () => {
     expect(statusBarModel(makeSnap({ status: 'no-claude-data' }), 'percentage', t).text).toBe('🧠 N/A');
   });
 
+  it('shows tokens and an estimate tooltip when capacity is only estimated', () => {
+    const est = makeSnap({ capacity: { tokens: 1000, provider: 'historical-peak', method: 'peak of 5 blocks', confidence: 'low', note: 'n' }, percentUsed: 147 });
+    for (const m of ['percentage', 'percentageRemaining', 'tokensRemaining', 'timeRemaining'] as const) {
+      const r = statusBarModel(est, m, t);
+      expect(r.text).toBe('🧠 4M');
+      expect(r.severity).toBe('normal');
+    }
+    expect(statusBarModel(est, 'percentage', t).tooltip).toContain('~147% of an estimated');
+    expect(buildTreeModel(est, false)[0]?.description).toMatch(/^~147%/);
+  });
+
   it('flags severity', () => {
     expect(statusBarModel(makeSnap({ percentUsed: 80 }), 'percentage', t).severity).toBe('warning');
     expect(statusBarModel(makeSnap({ percentUsed: 99 }), 'percentage', t).severity).toBe('error');

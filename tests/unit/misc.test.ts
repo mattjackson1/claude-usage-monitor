@@ -91,7 +91,7 @@ describe('CacheStore', () => {
 });
 
 function snap(percentUsed: number | undefined, messageCount = 1): UsageSnapshot {
-  return { percentUsed, window: { messageCount, totals: emptyTotals(), counted: 0, sessionCount: 0, byModel: [] } } as unknown as UsageSnapshot;
+  return { percentUsed, capacity: { confidence: 'high' }, window: { messageCount, totals: emptyTotals(), counted: 0, sessionCount: 0, byModel: [] } } as unknown as UsageSnapshot;
 }
 const cfg = { notificationsEnabled: true, notifyOnWindowReset: true, warningThresholds: [75, 90, 95] };
 
@@ -131,6 +131,11 @@ describe('evaluateNotifications', () => {
     expect(evaluateNotifications(snap(80), { ...cfg, notificationsEnabled: false }, st)).toEqual([]);
     expect(st.fired).toEqual([75]);
     expect(evaluateNotifications(snap(0, 0), { ...cfg, notifyOnWindowReset: false }, st)).toEqual([]);
+  });
+
+  it('does not alert on an estimated capacity', () => {
+    const est = { ...snap(99), capacity: { confidence: 'low' } } as unknown as UsageSnapshot;
+    expect(evaluateNotifications(est, cfg, emptyNotificationState())).toEqual([]);
   });
 
   it('supports custom thresholds and unknown capacity', () => {
