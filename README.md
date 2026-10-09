@@ -1,4 +1,6 @@
-# Claude Usage Monitor
+# Usage Monitor for Claude Code
+
+> Unofficial community extension. Not affiliated with or endorsed by Anthropic. "Claude" is a trademark of Anthropic.
 
 See your **Claude Code 5-hour usage** without leaving the editor. Everything is computed locally from
 Claude Code's own session files (`~/.claude/projects/**/*.jsonl`) — nothing is sent anywhere and it works offline.
