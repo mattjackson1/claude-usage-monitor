@@ -1,0 +1,8 @@
+{"parentUuid":null,"isSidechain":false,"type":"assistant","uuid":"ok_1-u0","timestamp":"2026-10-06T15:00:00.000Z","sessionId":"s1","requestId":"req_ok_1","apiBlockIndex":0,"message":{"id":"ok_1","model":"claude-opus-5-5","role":"assistant","content":[{"type":"thinking"}],"usage":{"input_tokens":10,"output_tokens":20,"cache_creation_input_tokens":30,"cache_read_input_tokens":40}}}
+{"type":"assistant","message":{"usage":{"input_tokens":1,
+not json at all "usage"
+
+[1,2,3,"usage"]
+{"type":"assistant","timestamp":"garbage","message":{"id":"x","model":"m","usage":{"input_tokens":1,"output_tokens":1}}}
+{"type":"assistant","timestamp":"2026-10-06T15:00:00.000Z","message":{"id":"x2","model":"m","usage":{"input_tokens":"many","output_tokens":1}}}
+{"parentUuid":null,"isSidechain":false,"type":"assistant","uuid":"ok_2-u0","timestamp":"2026-10-06T15:05:00.000Z","sessionId":"s1","requestId":"req_ok_2","apiBlockIndex":0,"message":{"id":"ok_2","model":"claude-opus-5-5","role":"assistant","content":[{"type":"thinking"}],"usage":{"input_tokens":10,"output_tokens":20,"cache_creation_input_tokens":30,"cache_read_input_tokens":40}}}

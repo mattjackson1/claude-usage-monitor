@@ -1,0 +1,252 @@
+{
+  "name": "claude-usage-monitor",
+  "displayName": "Claude Usage Monitor",
+  "icon": "media/icon.png",
+  "description": "Live Claude Code 5-hour usage in your status bar, derived from local session data.",
+  "version": "0.1.0",
+  "publisher": "matt-jackson",
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattjackson1/claude-usage-monitor"
+  },
+  "engines": {
+    "vscode": "^1.85.0",
+    "node": ">=20"
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "keywords": [
+    "claude",
+    "claude code",
+    "usage",
+    "tokens",
+    "anthropic"
+  ],
+  "extensionKind": [
+    "workspace",
+    "ui"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": true
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "claudeUsage",
+          "title": "Claude Usage",
+          "icon": "media/claude-usage.svg"
+        }
+      ]
+    },
+    "views": {
+      "claudeUsage": [
+        {
+          "type": "webview",
+          "id": "claudeUsage.summary",
+          "name": "Dashboard",
+          "when": "config.claudeUsage.dashboard.enabled"
+        },
+        {
+          "id": "claudeUsage.tree",
+          "name": "Usage",
+          "when": "config.claudeUsage.treeView.enabled"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "claudeUsage.tree",
+        "contents": "No Claude Code usage found yet.\n[Run diagnostics](command:claudeUsage.diagnostics)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "claudeUsage.refresh",
+        "title": "Refresh",
+        "category": "Claude Usage",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "claudeUsage.openDashboard",
+        "title": "Open Dashboard",
+        "category": "Claude Usage"
+      },
+      {
+        "command": "claudeUsage.openDataLocation",
+        "title": "Open Data Location",
+        "category": "Claude Usage"
+      },
+      {
+        "command": "claudeUsage.exportReport",
+        "title": "Export Usage Report",
+        "category": "Claude Usage"
+      },
+      {
+        "command": "claudeUsage.resetCache",
+        "title": "Reset Cache",
+        "category": "Claude Usage"
+      },
+      {
+        "command": "claudeUsage.openLogs",
+        "title": "Open Logs",
+        "category": "Claude Usage"
+      },
+      {
+        "command": "claudeUsage.diagnostics",
+        "title": "Diagnostics",
+        "category": "Claude Usage"
+      },
+      {
+        "command": "claudeUsage.showRawData",
+        "title": "Show Raw Usage Data",
+        "category": "Claude Usage"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "claudeUsage.refresh",
+          "when": "view == claudeUsage.tree",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Claude Usage",
+      "properties": {
+        "claudeUsage.refreshInterval": {
+          "type": "number",
+          "default": 60,
+          "minimum": 10,
+          "description": "Seconds between full window recalculations (file changes also trigger an immediate refresh)."
+        },
+        "claudeUsage.displayMode": {
+          "type": "string",
+          "default": "percentage",
+          "enum": [
+            "percentage",
+            "percentageRemaining",
+            "tokensUsed",
+            "tokensRemaining",
+            "timeRemaining"
+          ],
+          "enumDescriptions": [
+            "Percentage used",
+            "Percentage remaining",
+            "Tokens used in the window",
+            "Tokens remaining",
+            "Estimated time until capacity is reached"
+          ],
+          "description": "What the status bar item shows."
+        },
+        "claudeUsage.warningThresholds": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "default": [
+            75,
+            90,
+            95
+          ],
+          "description": "Usage percentages that trigger a notification (once per crossing)."
+        },
+        "claudeUsage.customCapacity": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "description": "Token capacity of the 5-hour window. 0 estimates it from your own history. Claude plan limits are not published locally, so percentages are estimates."
+        },
+        "claudeUsage.capacityBasis": {
+          "type": "string",
+          "default": "all",
+          "enum": [
+            "all",
+            "excludeCacheRead"
+          ],
+          "description": "Which tokens count toward usage and capacity. 'all' = input + output + cache creation + cache read."
+        },
+        "claudeUsage.hideCacheMetrics": {
+          "type": "boolean",
+          "default": false,
+          "description": "Hide cache read/create rows in the views."
+        },
+        "claudeUsage.historyRetentionDays": {
+          "type": "number",
+          "default": 14,
+          "minimum": 1,
+          "maximum": 365,
+          "description": "Days of history kept for trends and capacity estimation."
+        },
+        "claudeUsage.notifications.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show threshold notifications."
+        },
+        "claudeUsage.notifications.windowReset": {
+          "type": "boolean",
+          "default": true,
+          "description": "Notify when the rolling window empties."
+        },
+        "claudeUsage.debugLogging": {
+          "type": "boolean",
+          "default": false,
+          "description": "Verbose logging in the Claude Usage output channel."
+        },
+        "claudeUsage.dashboard.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the dashboard view and command."
+        },
+        "claudeUsage.treeView.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the tree view."
+        },
+        "claudeUsage.additionalPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Extra Claude data directories (each containing a 'projects' folder), e.g. \\\\wsl$\\Ubuntu\\home\\me\\.claude."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "smoke": "tsx scripts/smoke.mts",
+    "verify:bundle": "npm run build && tsx scripts/verify-bundle.mts",
+    "package": "npm run lint && npm run test && vsce package --no-dependencies",
+    "vscode:prepublish": "node esbuild.mjs --production"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/vscode": "^1.85.0",
+    "@vitest/coverage-v8": "^5.0.3",
+    "@vscode/vsce": "^4.0.0",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}
