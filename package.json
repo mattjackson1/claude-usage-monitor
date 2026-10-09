@@ -112,12 +112,23 @@
         "command": "claudeUsage.showRawData",
         "title": "Show Raw Usage Data",
         "category": "Claude Usage"
+      },
+      {
+        "command": "claudeUsage.openUsagePage",
+        "title": "Open Claude Usage Page (claude.ai)",
+        "category": "Claude Usage",
+        "icon": "$(link-external)"
       }
     ],
     "menus": {
       "view/title": [
         {
           "command": "claudeUsage.refresh",
+          "when": "view == claudeUsage.tree",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeUsage.openUsagePage",
           "when": "view == claudeUsage.tree",
           "group": "navigation"
         }

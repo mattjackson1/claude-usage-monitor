@@ -7,7 +7,12 @@ function nonce(): string {
   return randomBytes(16).toString('hex');
 }
 
-type Handlers = { onRefresh: () => void; hideCache: () => boolean };
+type Handlers = { onRefresh: () => void; onOpenUsagePage: () => void; hideCache: () => boolean };
+
+function handleMessage(m: { type?: string } | undefined, h: Handlers): void {
+  if (m?.type === 'refresh') h.onRefresh();
+  else if (m?.type === 'openUsagePage') h.onOpenUsagePage();
+}
 
 /** Full dashboard in an editor tab. */
 export class DashboardPanel {
@@ -31,9 +36,7 @@ export class DashboardPanel {
       retainContextWhenHidden: false,
     });
     this.panel.onDidDispose(() => (this.panel = undefined));
-    this.panel.webview.onDidReceiveMessage((m: { type?: string }) => {
-      if (m?.type === 'refresh') this.h.onRefresh();
-    });
+    this.panel.webview.onDidReceiveMessage((m: { type?: string }) => handleMessage(m, this.h));
     this.render();
   }
 
@@ -64,9 +67,7 @@ export class SummaryViewProvider implements vscode.WebviewViewProvider {
     this.view = view;
     view.webview.options = { enableScripts: true };
     view.onDidDispose(() => (this.view = undefined));
-    view.webview.onDidReceiveMessage((m: { type?: string }) => {
-      if (m?.type === 'refresh') this.h.onRefresh();
-    });
+    view.webview.onDidReceiveMessage((m: { type?: string }) => handleMessage(m, this.h));
     this.render();
   }
 

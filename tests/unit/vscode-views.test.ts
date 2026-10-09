@@ -68,7 +68,7 @@ describe('StatusBarController', () => {
 describe('DashboardPanel', () => {
   it('creates one panel, renders snapshots, handles refresh messages and disposal', () => {
     const onRefresh = vi.fn();
-    const d = new DashboardPanel({ onRefresh, hideCache: () => false });
+    const d = new DashboardPanel({ onRefresh, onOpenUsagePage: () => undefined, hideCache: () => false });
     d.update(snap); // no panel yet: no-op
     d.show();
     d.show();
@@ -89,7 +89,7 @@ describe('DashboardPanel', () => {
 describe('SummaryViewProvider', () => {
   it('renders into the resolved view and ignores updates before resolve', () => {
     const onRefresh = vi.fn();
-    const p = new SummaryViewProvider({ onRefresh, hideCache: () => true });
+    const p = new SummaryViewProvider({ onRefresh, onOpenUsagePage: () => undefined, hideCache: () => true });
     p.update(snap);
     let handler: (m: unknown) => void = () => undefined;
     const view = {

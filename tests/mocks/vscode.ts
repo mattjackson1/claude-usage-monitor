@@ -52,7 +52,9 @@ export const ViewColumn = { Active: -1 };
 
 export const Uri = {
   file: (p: string) => ({ path: p, fsPath: p }),
+  parse: (s: string) => ({ toString: () => s }),
 };
+export const opened: string[] = [];
 
 export const panels: { webview: { html: string }; fire(m: unknown): void; revealed: number; dispose(): void }[] = [];
 export const statusBarItems: { text: string; tooltip: unknown; command?: string; backgroundColor?: unknown; shown: boolean }[] = [];
@@ -115,6 +117,10 @@ export const workspace = {
 };
 
 export const env = {
+  openExternal: async (u: { toString(): string }) => {
+    opened.push(u.toString());
+    return true;
+  },
   get remoteName() {
     return state.remoteName;
   },
@@ -126,6 +132,7 @@ export function resetMock(): void {
   openedDocs.length = 0;
   written.clear();
   statusBarItems.length = 0;
+  opened.length = 0;
   panels.length = 0;
   state.saveTarget = undefined;
   state.configuration = {};

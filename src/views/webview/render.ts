@@ -34,10 +34,12 @@ table{border-collapse:collapse;width:100%}th{text-align:left;font-weight:normal;
 .bar>div{height:100%;background:var(--vscode-progressBar-background,#0e70c0)}
 .warn{color:var(--vscode-editorWarning-foreground)}.muted{opacity:.7}
 .spark{color:var(--vscode-textLink-foreground);width:100%;height:auto}
+button.link{background:transparent;color:var(--vscode-textLink-foreground);border:1px solid var(--vscode-textLink-foreground);margin-right:6px}
 button{background:var(--vscode-button-background);color:var(--vscode-button-foreground);border:0;padding:4px 10px;cursor:pointer}
 </style></head><body>`;
-  const script = `<script nonce="${o.nonce}">const vscode=acquireVsCodeApi();document.getElementById('refresh')?.addEventListener('click',()=>vscode.postMessage({type:'refresh'}));</script>`;
-  const tail = `${script}</body></html>`;
+  const script = `<script nonce="${o.nonce}">const vscode=acquireVsCodeApi();document.getElementById('refresh')?.addEventListener('click',()=>vscode.postMessage({type:'refresh'}));document.getElementById('usage-page')?.addEventListener('click',()=>vscode.postMessage({type:'openUsagePage'}));</script>`;
+  const usagePage = `<p><button id="usage-page" class="link" title="Opens claude.ai in your browser">Open claude.ai usage page ↗</button><span class="muted">Official plan limits and usage</span></p>`;
+  const tail = `${usagePage}${script}</body></html>`;
 
   if (!snap) return `${head}<h1>Claude Code Usage</h1><p class="muted">Loading…</p>${tail}`;
   if (snap.status === 'no-claude-data') {

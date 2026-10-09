@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { CLAUDE_USAGE_PAGE_URL } from '../constants';
 import type { Logger } from '../logger';
 import type { PlatformService } from '../platform/platform-service';
 import type { WatchMode } from '../claude/watcher';
@@ -29,6 +30,7 @@ export const COMMAND_IDS = [
   'claudeUsage.openLogs',
   'claudeUsage.diagnostics',
   'claudeUsage.showRawData',
+  'claudeUsage.openUsagePage',
 ] as const;
 
 async function openDocument(content: string, language: string): Promise<void> {
@@ -52,6 +54,10 @@ export function registerCommands(d: CommandDeps): vscode.Disposable[] {
       await d.service.rediscover();
       await d.onRediscover();
       await d.service.refresh();
+    }),
+
+    reg('claudeUsage.openUsagePage', async () => {
+      await vscode.env.openExternal(vscode.Uri.parse(CLAUDE_USAGE_PAGE_URL));
     }),
 
     reg('claudeUsage.openDashboard', async () => {

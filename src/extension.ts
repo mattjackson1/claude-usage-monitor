@@ -48,7 +48,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
   activeService = service;
   const statusBar = new StatusBarController();
   const tree = new UsageTreeProvider(() => settings.hideCacheMetrics);
-  const handlers = { onRefresh: () => void service.refresh(), hideCache: () => settings.hideCacheMetrics };
+  const handlers = {
+    onRefresh: () => void service.refresh(),
+    onOpenUsagePage: () => void vscode.commands.executeCommand('claudeUsage.openUsagePage'),
+    hideCache: () => settings.hideCacheMetrics,
+  };
   const dashboard = new DashboardPanel(handlers);
   const summary = new SummaryViewProvider(handlers);
 

@@ -13,4 +13,4 @@ const api = await ext.activate(ctx as never);
 console.log('bundle activated; commands:', mock.registeredCommands.size, '| status bar:', mock.statusBarItems[0]?.text);
 await ext.deactivate();
 void api;
-process.exit(mock.registeredCommands.size === 8 ? 0 : 1);
+process.exit(mock.registeredCommands.size === 9 ? 0 : 1);
